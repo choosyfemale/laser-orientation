@@ -1,7 +1,7 @@
 ---
 title: "LASER Badge"
 subtitle: "LASER Institute Orientation"
-author: "YOUR NAME HERE"
+author: "Emily Weigel"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -157,9 +157,9 @@ What do you notice about this data set? What do you wonder? Add one-two
 thoughts following the dashes next (you can add additional dashes if you
 like!):
 
--   
+-   It's got a ton of variables regarding student performance and demographics.
 
--   
+-   Course ID is a composite variable.
 
 There are other ways to inspect your data; the `glimpse()` function
 provides one such way. Run the code below to take a glimpse at your
@@ -184,11 +184,11 @@ your area of work and/or research.
 
 What rows typically (or you think may) represent:
 
--   
+-   Students in the dataset.
 
 What columns typically (or you think may) represent:
 
--   
+-   Variables to describe each student.
 
 Next, we'll use a few functions that are handy for preparing data in
 table form.
@@ -207,7 +207,7 @@ through the use of the {dplyr} R package.
 Let's select only a few variables.
 
 ```{r}
-d |> 
+d %>% #Needed to use old pipe :) 
   select(student_id, total_points_possible, total_points_earned)
 ```
 
@@ -234,8 +234,8 @@ variables are separated as you think about how to add an additional
 variable to this code.
 
 ```{r}
-d |> 
-  select(student_id, total_points_possible, total_points_earned)
+d %>% # old pipe to the rescue!!!
+  select(student_id, total_points_possible, total_points_earned, uv)
 ```
 
 Once added, the output should be different than in the code above -
@@ -249,7 +249,7 @@ the rows associated with students who earned a final grade (as a
 percentage) of 70 - 70% - or higher.
 
 ```{r}
-d |> 
+d %>% #old pipe
   filter(FinalGradeCEMS > 70)
 ```
 
@@ -260,14 +260,14 @@ value - larger or smaller (maybe much larger or smaller - feel free to
 play around with the code a bit!).
 
 ```{r}
-d |> 
-  filter(FinalGradeCEMS > 70)
+d %>% # old pipe 
+  filter(FinalGradeCEMS > 90)
 ```
 
 What happens when you change the cut-off from 70 to something else? Add
 a thought (or more):
 
--   
+-   Now the cut off is greater than 90, so all the A folks!
 
 ### Arrange
 
@@ -278,8 +278,8 @@ select(). We do this so we can view only the student ID and their final
 grade.
 
 ```{r}
-d |> 
-  select(student_id, FinalGradeCEMS) |> 
+d %>%
+  select(student_id, FinalGradeCEMS) %>%
   arrange(FinalGradeCEMS)
 ```
 
@@ -288,8 +288,8 @@ lowest to highest); you can change this by using the desc() function
 with arrange, like the following:
 
 ```{r}
-d |> 
-  select(student_id, FinalGradeCEMS) |> 
+d %>%
+  select(student_id, FinalGradeCEMS) %>%
   arrange(desc(FinalGradeCEMS))
 ```
 
@@ -301,9 +301,9 @@ data set. Consider returning to the code chunk above in which you
 glimpsed at the names of all of the variables.
 
 ```{r}
-d |> 
-  select(student_id, FinalGradeCEMS) |> 
-  arrange(desc(FinalGradeCEMS))
+d %>%
+  select(student_id, TimeSpent_hours) %>%  
+  arrange(desc(TimeSpent_hours))
 ```
 
 ### Reach 1 🎉
@@ -318,7 +318,10 @@ who wish to do a bit more with these functions at this time (we'll do
 more in class, too!)*
 
 ```{r}
-
+d  %>% 
+  select(student_id, TimeSpent_hours) %>%  
+  filter(TimeSpent_hours > 105) %>%  
+  arrange(desc(TimeSpent_hours))
 ```
 
 ## 3. EXPLORE
@@ -357,7 +360,7 @@ consider this list of valid color names here:
 
 ```{r}
 ggplot(d, aes(x = FinalGradeCEMS)) +
-  geom_histogram(fill = "blue")
+  geom_histogram(fill = "darkgoldenrod")
 ```
 
 Finally, we'll make one more change; visualize the distribution of
@@ -366,8 +369,8 @@ so by swapping out the name for another variable with FinalGradeCEMS.
 Also, change the color to one other than blue.
 
 ```{r}
-ggplot(d, aes(x = FinalGradeCEMS)) +
-  geom_histogram(fill = "blue")
+ggplot(d, aes(x = TimeSpent_hours)) +
+  geom_histogram(fill = "coral2")
 ```
 
 ### Reach 2 🎉
@@ -378,7 +381,7 @@ the names of two variables to the code below for what is now simply XXX
 (a placeholder).
 
 ```{r}
-ggplot(d, aes(x = XXX, y = XXX)) +
+ggplot(d, aes(x = TimeSpent_hours, y = FinalGradeCEMS)) +
   geom_point()
 ```
 
@@ -412,7 +415,7 @@ results? We're going to dive into this *much* more: if you have many
 questions now, you're in the right spot!
 
 ```{r}
-m2 <- lm(FinalGradeCEMS ~ TimeSpent + subject, data = d)
+m2 <- lm(FinalGradeCEMS ~ TimeSpent + subject + int, data = d)
 summary(m2)
 ```
 

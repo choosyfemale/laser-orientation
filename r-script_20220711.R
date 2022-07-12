@@ -10,11 +10,22 @@ read_csv("data/sci-online-classes.csv", col_names = TRUE)
 sci_data <- read_csv("data/sci-online-classes.csv", col_names = TRUE)
 
 library(readr)
+library(dplyr)
+library()
 #col_character()
 View(sci_data) #run only in the cmd line- may break knits
 
+sci_data <- read_csv("data/sci-online-classes.csv") %>% # read in data
+  select(student_id, FinalGradeCEMS, course_id, ) %>% # select variables
+  rename(final_grade = FinalGradeCEMS) %>% # rename FinalGradeCEMS
+  filter(final_grade > .5) %>% # keep grades higher than 50% 
+  drop_na() # remove rows with missing data
+
+### old way
+### run select outside of this and you can use the new version
 sci_data <- read_csv("data/sci-online-classes.csv") |> # read in data
   select(student_id, FinalGradeCEMS, course_id, ) |> # select variables
   rename(final_grade = FinalGradeCEMS) |> # rename FinalGradeCEMS
   filter(final_grade > .5) |> # keep grades higher than 50% 
   drop_na() # remove rows with missing data
+
